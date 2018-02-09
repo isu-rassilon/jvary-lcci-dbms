@@ -149,7 +149,6 @@
     function displayDetailFiles($dbh, $anchor, $dtree, $desc, $sql) {
       $ddf = simple_query($dbh, $sql);
       if( count($ddf) <= 0 ) {
-        print $sql;
         print "<!-- No ".$fDesc." -->\n";
       } else {
         $lunset = ": unset :";
