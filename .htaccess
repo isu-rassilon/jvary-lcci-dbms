@@ -1,6 +1,7 @@
 <IfModule mod_rewrite.c>
   RewriteEngine on
   RewriteRule  ^include/.*$ - [F,L]
+  RewriteRule  ^dbms/.*$ html/ [L]
   RewriteRule  ^index.php$ index.php [L]
   RewriteRule  ^$ html/ [L]
   RewriteRule  (.*) html/$1 [L]
