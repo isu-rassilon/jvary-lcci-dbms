@@ -33,7 +33,6 @@
       $rValue = trim($_REQUEST[$rname]);
       // Don't waste time processing if it's just the default/ignore value.
       if( $rValue != $ignoreIfValue ) {
-        $rValue = \PDO::quote($rValue);
         if( $chkNumeric ) {
           if( is_numeric($rValue) ) {
             if( $chkInt ) {
@@ -80,7 +79,6 @@
   $res = simple_query($dbh, $sql); 
 
   // Display the results.
-  print $sql;
   $sd_query_result_handle = $res;
   $sd_URL_prefix = "search_results.php?".$uget;
   include "../include/search_display.php";

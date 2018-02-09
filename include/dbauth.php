@@ -5,7 +5,7 @@
   $dbu_name = getenv("MYSQL_USER");
   $dbu_pass = getenv("MYSQL_PASSWORD");
 
-  $dbh = new \PDO('mysql:host=' . $db_host . ';dbname=' . $db_name, $db_user, $db_pass);
+  $dbh = new \PDO('mysql:host=' . $db_host . ';dbname=' . $db_name, $dbu_name, $dbu_pass);
   if(!$dbh) { die("Sorry. Your request could not be processed at this time. (MSG: SR100)"); }
 
   function simple_query($dbh, $sql, $params = array(), $remove_extra_spaces = true) {

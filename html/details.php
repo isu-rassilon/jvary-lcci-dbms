@@ -4,7 +4,7 @@
   if( !isset($_GET['ID']) ) { die("Bad link. Did not identify the desired run."); }
   else {
     if( !is_numeric($_GET['ID']) ) { die("Bad link. Passed run identifier was corrupt."); }
-    else { $RunID = \PDO::quote($_GET['ID']); } // escape just in case (for safety).
+    else { $RunID = $_GET['ID']; } // escape just in case (for safety).
   }
 
   // We'll need to access the database.

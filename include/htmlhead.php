@@ -25,7 +25,7 @@
   <div id="navigation" style="float: right;">
     <div id="hnav_bottom" style="float: right; position: relative; top: 48px;">
       <ul class="hnav">
-        <li><a href="index.php">DBMS Home</a></li>
+        <li><a href="/">DBMS Home</a></li>
         <li><a href="search_results.php?act=all">List All</a></li>
         <li><a href="search_form.php">Search</a></li>
       </ul>

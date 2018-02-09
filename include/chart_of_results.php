@@ -66,11 +66,11 @@ function corSetChange(fieldName, ele) {
 <table cellpadding="2px">
 <?php
   // Was a form submitted? If so, use those values. Otherwise, defaults.
-  $V2B = !isset($_POST['V2B']) ? 'Any' : \PDO::quote(trim($_POST['V2B']));
-  $V3B = !isset($_POST['V3B']) ? 'Any' : \PDO::quote(trim($_POST['V3B']));
-  $V4B = !isset($_POST['V4B']) ? 'Any' : \PDO::quote(trim($_POST['V4B']));
-  $X_F = !isset($_POST['X_F']) ? 'Any' : \PDO::quote(trim($_POST['X_F']));
-  $UID = !isset($_POST['UID']) ? 'Any' : \PDO::quote(trim($_POST['UID']));
+  $V2B = !isset($_POST['V2B']) ? 'Any' : trim($_POST['V2B']);
+  $V3B = !isset($_POST['V3B']) ? 'Any' : trim($_POST['V3B']);
+  $V4B = !isset($_POST['V4B']) ? 'Any' : trim($_POST['V4B']);
+  $X_F = !isset($_POST['X_F']) ? 'Any' : trim($_POST['X_F']);
+  $UID = !isset($_POST['UID']) ? 'Any' : trim($_POST['UID']);
 
   function corLink($fField, $fValue) {
     return "<a href=\"JavaScript: corSet('".$fField."','".$fValue."')\">".trim($fValue)."</a>";
@@ -106,9 +106,9 @@ function corSetChange(fieldName, ele) {
     print "</td></tr>\n";
   }
 
-  genPotentialRow("V2B", "2B_potential", $V2B, "2 Body Potential", $dbc);
-  genPotentialRow("V3B", "3B_potential", $V3B, "3 Body Potential", $dbc);
-  genPotentialRow("V4B", "4B_potential", $V4B, "4 Body Potential", $dbc);
+  genPotentialRow("V2B", "2B_potential", $V2B, "2 Body Potential", $dbh);
+  genPotentialRow("V3B", "3B_potential", $V3B, "3 Body Potential", $dbh);
+  genPotentialRow("V4B", "4B_potential", $V4B, "4 Body Potential", $dbh);
 
   print "<tr><td><strong>External Field:</strong></td>";
   $qry = "select ext_field from lcci.RUN group by ext_field";

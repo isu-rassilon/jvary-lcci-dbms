@@ -27,7 +27,7 @@
   <div style="clear: both; height: 5px; width: 100%;"></div>
 <?php
   $Vc = 0;
-  function genPotentialRow($fField, $pField, $pTitle, $dbc, $Vc) {
+  function genPotentialRow($fField, $pField, $pTitle, $dbh, $Vc) {
     $qry = "select ".$pField." from lcci.RUN group by ".$pField;
     $res = simple_query($dbh, $qry);
     if( $res ) {
@@ -52,10 +52,10 @@
     return $Vc;
   }
 
-  $Vc = genPotentialRow("V2B", "2B_potential", "2 Body Potential", $dbc, $Vc);
-  $Vc = genPotentialRow("V3B", "3B_potential", "3 Body Potential", $dbc, $Vc);
-  $Vc = genPotentialRow("V4B", "4B_potential", "4 Body Potential", $dbc, $Vc);
-  $Vc = genPotentialRow("ExtF", "ext_field", "External Field", $dbc, $Vc);
+  $Vc = genPotentialRow("V2B", "2B_potential", "2 Body Potential", $dbh, $Vc);
+  $Vc = genPotentialRow("V3B", "3B_potential", "3 Body Potential", $dbh, $Vc);
+  $Vc = genPotentialRow("V4B", "4B_potential", "4 Body Potential", $dbh, $Vc);
+  $Vc = genPotentialRow("ExtF", "ext_field", "External Field", $dbh, $Vc);
 ?>
   </div>
   <h3><a href="#">Calculated Observables</a></h3>
