@@ -1,0 +1,55 @@
+a {
+	text-decoration: none;
+	color: #262577;
+}
+
+a:hover {
+	text-decoration: underline;
+	color: #262577;
+}
+
+a:active {
+	text-decoration: none;
+	color: red;
+}
+
+a:visit {
+	text-decoration: none;
+	color: #262577;
+} 
+
+body {
+  font: 14px 'Lucida Grande', Verdana, Arial, Sans-Serif;
+  margin: 0 0 0 0px;
+}
+
+#page {
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table th {
+	background-color: silver;
+}
+
+/* Class for underlined text. */
+.ulText {
+	text-decoration: underline;
+}
+
+/* Class for highlighting table rows. */
+.trHighlight {
+	background-color: yellow;
+}
+
+/* Class for clearing the table row highlight. */
+.trNormal {
+	background-color: white;
+}
+
