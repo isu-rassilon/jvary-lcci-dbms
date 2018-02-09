@@ -154,7 +154,7 @@
         $lunset = ": unset :";
         $ldir = $lunset;
         if( count($ddf) > 0 ) {
-          print "<h3><a href=\"#\">".$desc."</a></h3>";
+          print "<h3><a href=\"#".$anchor."\">".$desc."</a></h3>";
           print "<div>";
           print "<ul class=\"runCalcs\">\n";
           foreach($ddf as $out) {
