@@ -10,9 +10,6 @@
 
   // Connect to the database.
   include "../include/dbauth.php";
-  $dbc = mysql_connect($db_host, $dbu_name, $dbu_pass);
-  if(!$dbc) { die("Sorry. Your request could not be processed at this time. (MSG: SR100)"); }
-  mysql_select_db("lcci", $dbc);
 
   // Start Creating Query.
   $sql  = "select r.runID, u.name, r.Z, r.N, r.nshell_min_Z, r.nshell_max_Z, ";
@@ -30,18 +27,17 @@
       return " and " . $addStr;
     }
   }
+
   function sqlParam($rname, $cname, $cond, $ignoreIfValue, $chkNumeric, $chkInt, $chkBool) {
     if( isset($_REQUEST[$rname]) ) {
       $rValue = trim($_REQUEST[$rname]);
       // Don't waste time processing if it's just the default/ignore value.
       if( $rValue != $ignoreIfValue ) {
-        $rValue = mysql_escape_string($rValue);
+        $rValue = \PDO::quote($rValue);
         if( $chkNumeric ) {
           if( is_numeric($rValue) ) {
             if( $chkInt ) {
-//              if( is_int($rValue) ) {
                 return addToWhere($cond, $cname . "=" . $rValue);
-//              }
             } else {
               return addToWhere($cond, $cname . "=" . $rValue);
             }
@@ -81,16 +77,13 @@
   if( $cond != "where" ) {
     $sql .= $cond;
   }
-  $res = mysql_query($sql, $dbc);
+  $res = simple_query($dbh, $sql); 
 
   // Display the results.
-  //print $sql;
+  print $sql;
   $sd_query_result_handle = $res;
   $sd_URL_prefix = "search_results.php?".$uget;
   include "../include/search_display.php";
-
-  // We're done with that query. Clean up.
-  mysql_free_result($res);
 
   // Finishing the timing statement. How did we do? 36 hours? What?!? ;-)
   $mtime     = explode(' ', microtime());

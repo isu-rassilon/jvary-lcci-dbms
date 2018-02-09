@@ -2,9 +2,6 @@
   $htmlTitle = "DBMS Search";
   include "../include/htmlhead.php";
   include "../include/dbauth.php";
-  $dbc = mysql_connect($db_host,$dbu_name,$dbu_pass);
-  if (!$dbc){ die('Could not connect: ' . mysql_error()); }
-  mysql_select_db("lcci", $dbc);
 ?>
 <script language="JavaScript" type="text/javascript">
   function obsToggle(fid) {
@@ -32,14 +29,14 @@
   $Vc = 0;
   function genPotentialRow($fField, $pField, $pTitle, $dbc, $Vc) {
     $qry = "select ".$pField." from lcci.RUN group by ".$pField;
-    $res = mysql_query($qry, $dbc);
+    $res = simple_query($dbh, $qry);
     if( $res ) {
-      if( mysql_num_rows($res) > 1 ) {
+      if( count($res) > 1 ) {
         print "<div style=\"float: left; width: 8em;\">".$pTitle."</div>";
         print "<div style=\"float: left; width: 12em;\">";
         print "<select name=\"".$fField."\">";
         print "<option value=\"any\">Not Specified</option>";
-        while( $row = mysql_fetch_assoc($res) ) {
+        foreach($res as $row) {
           print "<option value=\"".$row[$pField]."\">".$row[$pField]."</option>";
         }
         print "</select>";
@@ -52,7 +49,6 @@
         }
       }
     }
-    mysql_free_result($res);
     return $Vc;
   }
 
@@ -86,35 +82,33 @@
 <?php
   // Display Users List.
   $qry = "select u.name, u.id from lcci.RUN r join lcci.USERS u on r.username = u.username group by name, id order by name, id";
-  $res = mysql_query($qry, $dbc);
+  $res = simple_query($dbh, $qry);
   if( $res ) {
     print "<div style=\"float: left; width: 8em;\">Username</div>";
     print "<div style=\"float: left; width: 12em;\">";
     print "<select name=\"userID\">";
     print "<option value=\"any\">Any</option>";
-    while( $row = mysql_fetch_assoc($res) ) {
+    foreach($res as $row) {
       print "<option value=\"". $row['id']. "\">" . $row['name'] . "</option>";
     }
     print "</select>";
     print "</div>";
   }
-  mysql_free_result($res);
 
   // Display Machines List.
   $qry = "select distinct machineID from lcci.RUN order by machineID";
-  $res = mysql_query($qry, $dbc);
+  $res = simple_query($dbh, $qry);
   if( $res ) {
     print "<div style=\"float: left; width: 8em;\">Machine</div>";
     print "<div style=\"float: left; width: 12em;\">";
     print "<select name=\"machineID\">";
     print "<option value=\"any\">Any</option>";
-    while( $row = mysql_fetch_assoc($res) ) {
+    foreach($res as $row) {
       print "<option value=\"". $row['machineID']. "\">" . $row['machineID'] . "</option>";
     }
     print "</select>";
     print "</div>";
   }
-  mysql_free_result($res);
 ?>
     <div style="clear: both; height: 5px; width: 100%;"></div>
     <div style="float: left; width: 8em;">Nmax</div>

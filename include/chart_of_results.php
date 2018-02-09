@@ -1,5 +1,5 @@
 <!-- Begin "Chart of Results" -->
-<?php include "../include/dbauth.php"; $dbc = mysql_connect($db_host, $dbu_name, $dbu_pass); ?>
+<?php include "../include/dbauth.php"; ?>
 <style type="text/css">
 .corHead {
   font-size: 14pt;
@@ -66,24 +66,24 @@ function corSetChange(fieldName, ele) {
 <table cellpadding="2px">
 <?php
   // Was a form submitted? If so, use those values. Otherwise, defaults.
-  $V2B = !isset($_POST['V2B']) ? 'Any' : mysql_escape_string(trim($_POST['V2B']));
-  $V3B = !isset($_POST['V3B']) ? 'Any' : mysql_escape_string(trim($_POST['V3B']));
-  $V4B = !isset($_POST['V4B']) ? 'Any' : mysql_escape_string(trim($_POST['V4B']));
-  $X_F = !isset($_POST['X_F']) ? 'Any' : mysql_escape_string(trim($_POST['X_F']));
-  $UID = !isset($_POST['UID']) ? 'Any' : mysql_escape_string(trim($_POST['UID']));
+  $V2B = !isset($_POST['V2B']) ? 'Any' : \PDO::quote(trim($_POST['V2B']));
+  $V3B = !isset($_POST['V3B']) ? 'Any' : \PDO::quote(trim($_POST['V3B']));
+  $V4B = !isset($_POST['V4B']) ? 'Any' : \PDO::quote(trim($_POST['V4B']));
+  $X_F = !isset($_POST['X_F']) ? 'Any' : \PDO::quote(trim($_POST['X_F']));
+  $UID = !isset($_POST['UID']) ? 'Any' : \PDO::quote(trim($_POST['UID']));
 
   function corLink($fField, $fValue) {
     return "<a href=\"JavaScript: corSet('".$fField."','".$fValue."')\">".trim($fValue)."</a>";
   }
 
-  function genPotentialRow($fField, $pField, $pSelected, $pTitle, $dbc) {
+  function genPotentialRow($fField, $pField, $pSelected, $pTitle, $dbh) {
     $qry = "select ".$pField." from lcci.RUN group by ".$pField;
-    $res = mysql_query($qry, $dbc);
+    $res = simple_query($dbh, $qry);
     if( $res ) {
-      if( mysql_num_rows($res) == 0 ) {
+      if( count($res) == 0 ) {
         // Do nothing.
-      } elseif( mysql_num_rows($res) == 1) {
-        $row = mysql_fetch_assoc($res);
+      } elseif( count($res) == 1) {
+        $row = $res[0];
         // Only show if not "NONE".
         if( trim($row[$pField]) != "NONE" ) {
           print "<tr><td><strong>".$pTitle.":</strong></td><td><em>".$pSelected."</em></td><td>";
@@ -95,7 +95,7 @@ function corSetChange(fieldName, ele) {
       } else {
         print "<tr><td><strong>".$pTitle.":</strong></td><td><em>".$pSelected."</em></td><td>";
         if( $pSelected != 'Any' ) { print "&nbsp;&nbsp;".corLink($fField,"Any"); }
-        while( $row = mysql_fetch_assoc($res) ) {
+        foreach($res as $row) {
           // We don't need to print the same line twice.
           if( $row[$pField] != $pSelected ) {
             print "&nbsp;&nbsp;" . corLink($fField,$row[$pField]);
@@ -103,7 +103,6 @@ function corSetChange(fieldName, ele) {
         }
       }
     }
-    mysql_free_result($res);
     print "</td></tr>\n";
   }
 
@@ -113,30 +112,28 @@ function corSetChange(fieldName, ele) {
 
   print "<tr><td><strong>External Field:</strong></td>";
   $qry = "select ext_field from lcci.RUN group by ext_field";
-  $res = mysql_query($qry, $dbc);
+  $res = simple_query($dbh, $qry);
   if( $res ) {
     print "<td colspan=2><select onChange=\"JavaScript: corSetChange('X_F',this);\" id=\"extFieldSelect\" style=\"width:380px\">";
     print "<option value=\"".$X_F."\" selected><em>".$X_F."</em></option>";
     print "<option value=\"Any\"><em>Any</em></option>";
-    while( $row = mysql_fetch_assoc($res) ) {
+    foreach($res as $row) {
       print "<option value=\"". $row['ext_field']. "\">" . $row['ext_field'] . "</option>";
     }
   }
-  mysql_free_result($res);
   print "</select></td></tr>\n";
 
   print "<tr><td><strong>User:</strong></td>";
   $qry = "select u.name, u.id from lcci.RUN r join lcci.USERS u on r.username = u.username group by name, id order by name, id";
-  $res = mysql_query($qry, $dbc);
+  $res = simple_query($dbh, $qry);
   if( $res ) {
     print "<td colspan=2><select onChange=\"JavaScript: corSetChange('UID',this);\" id=\"userSelect\" style=\"width:380px\">";
     print "<option value=\"Any\"><em>Any</em></option>";
-    while( $row = mysql_fetch_assoc($res) ) {
+    foreach($res as $row) {
       if( $row['id'] == $UID ) { $optString = "selected"; } else { $optString = ""; }
       print "<option value=\"". $row['id']. "\"". $optString .">" . $row['name'] . "</option>";
     }
   }
-  mysql_free_result($res);
   print "</td></tr>\n";
 ?>
 </table>
@@ -146,28 +143,22 @@ function corSetChange(fieldName, ele) {
 <?php
   // Let's get some statistics on the number of runs and calculations.
   $qry = "select (select count(*) from lcci.RUN) as numRuns, (select count(*) from lcci.RES_FILE) as numCalcs";
-  $res = mysql_query($qry, $dbc);
-  if( !$res ) { die("DB Issues. Sorry. (Error=CoR080)"); }
-  $row = mysql_fetch_assoc($res);
+  $res = simple_query($dbh, $qry);
+  $row = $res[0];
   $total_calculations_stored = $row['numCalcs'];
   $total_runs_stored = $row['numRuns'];
-  mysql_free_result($res);
 
   // More statistics...number of different nuclei.
   $qry = "select Z, N, count(*) as T from lcci.RUN group by Z, N order by Z desc, N asc";
-  $res = mysql_query($qry, $dbc);
-  if( !$res ) { die("DB Issues. Sorry. (Error=CoR090)"); }
-  $total_distinct_nuclei = mysql_num_rows($res);
-  mysql_free_result($res);
+  $res = simple_query($dbh, $qry);
+  $total_distinct_nuclei = count($res);
 
   // Check how big the table needs to be.
   $qry = "select max(Z) as maxZ, max(N) as maxN from lcci.RUN";
-  $res = mysql_query($qry, $dbc);
-  if( !$res ) { die("DB Issues. Sorry. (Error=CoR100)"); }
-  $row = mysql_fetch_assoc($res);
+  $res = simple_query($dbh, $qry);
+  $row = $res[0];
   $zmx = $row['maxZ'];
   $nmx = $row['maxN'];
-  mysql_free_result( $res );
 
   // Actual result counts.
   $qwc = " where 1=1 "; // Query "Where" Clause...
@@ -177,9 +168,9 @@ function corSetChange(fieldName, ele) {
   if( $X_F != "Any" ) { $qwc .= " and ext_field = '".$X_F."'"; }
   if( $UID != "Any" ) { $qwc .= " and username in (select username from lcci.USERS where id = ".$UID.") "; }
   $qry = "select Z, N, count(*) as T, max(runID) as RunID from lcci.RUN ".$qwc." group by Z, N order by Z desc, N asc";
-  $res = mysql_query($qry, $dbc);
-  if( !$res ) { echo $qry; die("DB Issues. Sorry. (Error=CoR110)"); }
-  $row = mysql_fetch_assoc($res);
+  $res = simple_query($dbh, $qry);
+  $rec = 0;
+  $row = $res[$rec];
 
   // Create strings for the search form.
   //   Default values are blank.
@@ -206,7 +197,10 @@ function corSetChange(fieldName, ele) {
         print $row['T'];
         print "</a>";
         // Move to the next result row.
-        $row = mysql_fetch_assoc($res);
+        if( $rec < count($res) ) {
+          $rec+=1;
+          $row = $res[$rec];
+        }
       }
       print "</td>";
     }
@@ -220,7 +214,6 @@ function corSetChange(fieldName, ele) {
   print "</tr>\n";
 
   // Clean up.
-  mysql_free_result( $res );
   $summary_message = $total_calculations_stored . " calculations in " . $total_runs_stored . " runs of " . $total_distinct_nuclei . " distinct nuclei.";
 ?>
 </table>

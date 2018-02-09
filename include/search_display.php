@@ -6,12 +6,11 @@
       "bLengthChange": true,
       "bSort": true,
       "bFilter": false,
-//      "bJQueryUI": true,
       "sPaginationType": "full_numbers",
       "iDisplayLength": 100});
   } );
 </script>
-<!--p><?php echo "Search Results: " . mysql_num_rows($sd_query_result_handle) . " records found.\n"; ?></p-->
+<!--p><?php echo "Search Results: " . count($sd_query_result_handle) . " records found.\n"; ?></p-->
 <table border="1" id="resultsTable" class="display">
 <?php
   $fields = array("runID", "name", "Z", "N", "nshell_min_Z", "nshell_max_Z", 
@@ -19,7 +18,7 @@
                   "twiceJ", "twiceMj", "START_DATE");
 
   echo "<thead><tr>";
-  foreach( $fields as $field) {
+  foreach($fields as $field) {
     if( $field == "twiceJ" ) {
       echo "<th>J</th>";
     } elseif( $field == "twiceMj" ) {
@@ -30,7 +29,7 @@
   }
   echo "</tr></thead>\n<tbody>\n";
 
-  while($row = mysql_fetch_assoc($sd_query_result_handle)){
+  foreach( $sd_query_result_handle as $row ) {
     $runID = $row['runID'];
     echo "<tr onclick=\"JavaScript: dehighlightTR(this); goID(".$runID.");\">";
     foreach( $fields as $field ) {
@@ -48,10 +47,9 @@
   }
   echo "</tbody>\n";
   echo "</table>\n";
-  //echo "Search Results: " . mysql_num_rows($sd_query_result_handle) . " records found.\n";
 
   // If there was only one result, redirect.
-  if( mysql_num_rows($sd_query_result_handle) == 1 ) {
+  if( count($sd_query_result_handle) == 1 ) {
     echo "<br /><br />";
     echo "<div>Automatically redirecting to only match...</div>";
     echo "<script language=\"JavaScript\">";
