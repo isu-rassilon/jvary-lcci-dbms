@@ -1,8 +1,8 @@
 <?php
-  $db_host  = 'mysql';
   $db_port  = 3306;
-  $db_name  = 'lcci';
-  $dbu_name = getenv("MYSQL_USER");
+  $db_host  = getenv("MYSQL_HOSTNAME");
+  $db_name  = getenv("MYSQL_SCHEMA");
+  $dbu_name = getenv("MYSQL_USERNAME");
   $dbu_pass = getenv("MYSQL_PASSWORD");
 
   $dbh = new \PDO('mysql:host=' . $db_host . ';dbname=' . $db_name, $dbu_name, $dbu_pass);
