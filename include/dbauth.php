@@ -1,11 +1,14 @@
 <?php
-  $db_port  = 3306;
+  $db_uri   = getenv("MYSQL_URI");
+  $db_port  = getenv("MYSQL_PORT");
   $db_host  = getenv("MYSQL_HOSTNAME");
   $db_name  = getenv("MYSQL_SCHEMA");
   $dbu_name = getenv("MYSQL_USERNAME");
   $dbu_pass = getenv("MYSQL_PASSWORD");
 
-  $dbh = new \PDO('mysql:host=' . $db_host . ';dbname=' . $db_name, $dbu_name, $dbu_pass);
+  // Convert $db_uri to $db_host (ip)...
+
+  $dbh = new \PDO('mysql:host=' . $db_host . ';port=' . $db_port . ';dbname=' . $db_name, $dbu_name, $dbu_pass);
   if(!$dbh) { die("Sorry. Your request could not be processed at this time. (MSG: SR100)"); }
 
   function simple_query($dbh, $sql, $params = array(), $remove_extra_spaces = true) {
