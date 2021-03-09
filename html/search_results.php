@@ -15,8 +15,8 @@
   $sql  = "select r.runID, u.name, r.Z, r.N, r.nshell_min_Z, r.nshell_max_Z, ";
   $sql .= "       r.nshell_min_N, r.nshell_max_N, r.Nmax, r.Nstates, r.twiceJ, ";
   $sql .= "       r.twiceMj, r.START_DATE ";
-  $sql .= "from lcci.RUN r ";
-  $sql .= "join lcci.USERS u ";
+  $sql .= "from RUN r ";
+  $sql .= "join USERS u ";
   $sql .= "  on r.username = u.username ";
 
   // Create a function to simplify the form -> sql manipulation.

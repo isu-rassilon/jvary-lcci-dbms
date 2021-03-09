@@ -11,7 +11,7 @@
   include "../include/dbauth.php";
 
   // Does this RunID actually exist?
-  $qry = "select r.*, u.name, pt.symbol as nuclei_symbol, pt.name as nuclei_name, (Z+N) as A, timediff(END_DATE,START_DATE) as time_taken from lcci.RUN r join lcci.USERS u on r.username = u.username join lcci.periodic_table pt on ifnull(pt.protons,r.Z)=r.Z and ifnull(pt.neutrons,r.N)=r.N where r.runID = " . $RunID . " order by override desc";
+  $qry = "select r.*, u.name, pt.symbol as nuclei_symbol, pt.name as nuclei_name, (Z+N) as A, timediff(END_DATE,START_DATE) as time_taken from RUN r join USERS u on r.username = u.username join periodic_table pt on ifnull(pt.protons,r.Z)=r.Z and ifnull(pt.neutrons,r.N)=r.N where r.runID = " . $RunID . " order by override desc";
   $run = simple_query($dbh, $qry);
   if( count($run) <= 0 ) {
     die("Sorry, the link provides references a run that doesn't appear to exist.");
@@ -176,10 +176,10 @@
       }
     }
 
-    displayDetailFiles( $dbh, "results", true, $resData."Result Files", "select ID as id, filename as fspec from lcci.RES_FILE where runID = ".$RunID." order by fspec" );
-    displayDetailFiles( $dbh, "obdme", true, "OBDME - One Body Density Matrix Elements Files", "select ID as id, filename as fspec from lcci.OBDME_FILE where runID = ".$RunID." order by fspec" );
-    displayDetailFiles( $dbh, "smwf", true, "SMWF - (Shell Model) Wave Function Files", "select ID as id, filename as fspec from lcci.SMWF_FILE where runID = ".$RunID." order by fspec" );
-    displayDetailFiles( $dbh, "hamdir", false, "Hamiltonian Directories", "select ID as id, path as fspec from lcci.HAMDIR where runID = ".$RunID." order by fspec" );
+    displayDetailFiles( $dbh, "results", true, $resData."Result Files", "select ID as id, filename as fspec from RES_FILE where runID = ".$RunID." order by fspec" );
+    displayDetailFiles( $dbh, "obdme", true, "OBDME - One Body Density Matrix Elements Files", "select ID as id, filename as fspec from OBDME_FILE where runID = ".$RunID." order by fspec" );
+    displayDetailFiles( $dbh, "smwf", true, "SMWF - (Shell Model) Wave Function Files", "select ID as id, filename as fspec from SMWF_FILE where runID = ".$RunID." order by fspec" );
+    displayDetailFiles( $dbh, "hamdir", false, "Hamiltonian Directories", "select ID as id, path as fspec from HAMDIR where runID = ".$RunID." order by fspec" );
   ?>
 </div>
 

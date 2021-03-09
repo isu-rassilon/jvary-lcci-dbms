@@ -28,7 +28,7 @@
 <?php
   $Vc = 0;
   function genPotentialRow($fField, $pField, $pTitle, $dbh, $Vc) {
-    $qry = "select ".$pField." from lcci.RUN group by ".$pField;
+    $qry = "select ".$pField." from RUN group by ".$pField;
     $res = simple_query($dbh, $qry);
     if( $res ) {
       if( count($res) > 1 ) {
@@ -81,7 +81,7 @@
   <div>
 <?php
   // Display Users List.
-  $qry = "select u.name, u.id from lcci.RUN r join lcci.USERS u on r.username = u.username group by name, id order by name, id";
+  $qry = "select u.name, u.id from RUN r join USERS u on r.username = u.username group by name, id order by name, id";
   $res = simple_query($dbh, $qry);
   if( $res ) {
     print "<div style=\"float: left; width: 8em;\">Username</div>";
@@ -96,7 +96,7 @@
   }
 
   // Display Machines List.
-  $qry = "select distinct machineID from lcci.RUN order by machineID";
+  $qry = "select distinct machineID from RUN order by machineID";
   $res = simple_query($dbh, $qry);
   if( $res ) {
     print "<div style=\"float: left; width: 8em;\">Machine</div>";

@@ -77,7 +77,7 @@ function corSetChange(fieldName, ele) {
   }
 
   function genPotentialRow($fField, $pField, $pSelected, $pTitle, $dbh) {
-    $qry = "select ".$pField." from lcci.RUN group by ".$pField;
+    $qry = "select ".$pField." from RUN group by ".$pField;
     $res = simple_query($dbh, $qry);
     if( $res ) {
       if( count($res) == 0 ) {
@@ -111,7 +111,7 @@ function corSetChange(fieldName, ele) {
   genPotentialRow("V4B", "4B_potential", $V4B, "4 Body Potential", $dbh);
 
   print "<tr><td><strong>External Field:</strong></td>";
-  $qry = "select ext_field from lcci.RUN group by ext_field";
+  $qry = "select ext_field from RUN group by ext_field";
   $res = simple_query($dbh, $qry);
   if( $res ) {
     print "<td colspan=2><select onChange=\"JavaScript: corSetChange('X_F',this);\" id=\"extFieldSelect\" style=\"width:380px\">";
@@ -124,7 +124,7 @@ function corSetChange(fieldName, ele) {
   print "</select></td></tr>\n";
 
   print "<tr><td><strong>User:</strong></td>";
-  $qry = "select u.name, u.id from lcci.RUN r join lcci.USERS u on r.username = u.username group by name, id order by name, id";
+  $qry = "select u.name, u.id from RUN r join USERS u on r.username = u.username group by name, id order by name, id";
   $res = simple_query($dbh, $qry);
   if( $res ) {
     print "<td colspan=2><select onChange=\"JavaScript: corSetChange('UID',this);\" id=\"userSelect\" style=\"width:380px\">";
@@ -142,19 +142,19 @@ function corSetChange(fieldName, ele) {
 <table class="cor">
 <?php
   // Let's get some statistics on the number of runs and calculations.
-  $qry = "select (select count(*) from lcci.RUN) as numRuns, (select count(*) from lcci.RES_FILE) as numCalcs";
+  $qry = "select (select count(*) from RUN) as numRuns, (select count(*) from RES_FILE) as numCalcs";
   $res = simple_query($dbh, $qry);
   $row = $res[0];
   $total_calculations_stored = $row['numCalcs'];
   $total_runs_stored = $row['numRuns'];
 
   // More statistics...number of different nuclei.
-  $qry = "select Z, N, count(*) as T from lcci.RUN group by Z, N order by Z desc, N asc";
+  $qry = "select Z, N, count(*) as T from RUN group by Z, N order by Z desc, N asc";
   $res = simple_query($dbh, $qry);
   $total_distinct_nuclei = count($res);
 
   // Check how big the table needs to be.
-  $qry = "select max(Z) as maxZ, max(N) as maxN from lcci.RUN";
+  $qry = "select max(Z) as maxZ, max(N) as maxN from RUN";
   $res = simple_query($dbh, $qry);
   $row = $res[0];
   $zmx = $row['maxZ'];
@@ -166,8 +166,8 @@ function corSetChange(fieldName, ele) {
   if( $V3B != "Any" ) { $qwc .= " and 3B_potential = '".$V3B."'"; }
   if( $V4B != "Any" ) { $qwc .= " and 4B_potential = '".$V4B."'"; }
   if( $X_F != "Any" ) { $qwc .= " and ext_field = '".$X_F."'"; }
-  if( $UID != "Any" ) { $qwc .= " and username in (select username from lcci.USERS where id = ".$UID.") "; }
-  $qry = "select Z, N, count(*) as T, max(runID) as RunID from lcci.RUN ".$qwc." group by Z, N order by Z desc, N asc";
+  if( $UID != "Any" ) { $qwc .= " and username in (select username from USERS where id = ".$UID.") "; }
+  $qry = "select Z, N, count(*) as T, max(runID) as RunID from RUN ".$qwc." group by Z, N order by Z desc, N asc";
   $res = simple_query($dbh, $qry);
   $rec = 0;
   $row = $res[$rec];
